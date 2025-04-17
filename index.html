@@ -1,49 +1,56 @@
-// notion-fetch.js
-const { Client } = require('@notionhq/client');
-const fs = require('fs');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Grid Preview</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f8f8f8;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            max-width: 300px;
+        }
+        .grid img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <p>test headline 1 </p>
+    <div class="grid" id="insta-grid">
+        <!-- Images will be loaded here -->
+    </div>
 
-const notion = new Client({ auth: process.env.NOTION_API_KEY });
+    <script>
+        const images = [
+             "https://www.caridonproperty.co.uk/assets/components/phpthumbof/cache/NKKE9051.b5b0f378a35d50d3632b261163190d5e.jpg", // Replace with real Instagram post URLs
+            "https://www.caridonproperty.co.uk/assets/components/phpthumbof/cache/GDBA-2025-logos_Stacked%20Finalist.2d51be84558e8989421ac6663638b91f.jpg",
+            "https://www.caridonproperty.co.uk/assets/components/phpthumbof/cache/CaridonPortraits_898.a376ba08ed1ed07d4b3437267bca0ee8.jpg",
+            "https://www.caridonproperty.co.uk/assets/components/phpthumbof/cache/NEG_AWD_24_006.3509a619acdb703bcec1edd68de4b9f4.jpg",
+            "https://www.caridonproperty.co.uk/assets/components/phpthumbof/cache/Winner%20_tiles_%20202424.a57ed563ec2fcafc774843d328c91dc8.jpg",
+            "https://www.caridonproperty.co.uk/assets/components/phpthumbof/cache/468093488_1174820657445760_2075996971250247748_n.c693b7b0a61639ca9215b518f8f8759e.jpg",
+            "https://www.caridonproperty.co.uk/assets/components/phpthumbof/cache/1NcIXBBw.e4df0e1aa8e7191abe3591d013ec73e6.jpg",
+            "https://www.caridonproperty.co.uk/assets/components/phpthumbof/cache/1732016966240.f6bf30d2e0a79177abd4c0e939c173ae.jpg",
+            "https://www.caridonproperty.co.uk/assets/components/phpthumbof/cache/Caridon%20Property%20LT_G.d72c706b9973b406bc21bcdb0165f699.png"
+           ];
 
-const databaseId = process.env.NOTION_DATABASE_ID;
-
-async function getPosts() {
-  const response = await notion.databases.query({
-    database_id: databaseId,
-    filter: {
-      property: 'Status',
-      select: {
-        equals: 'Posted',
-      },
-    },
-  });
-
-  const posts = response.results.map((page) => {
-    const url = page.properties['Image URL'].url || page.properties['Image URL'].rich_text?.[0]?.plain_text;
-    return url;
-  });
-
-  const html = `
-  <html>
-    <head>
-      <style>
-        body { font-family: sans-serif; margin: 20px; background: #fff; }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .grid img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 6px; }
-      </style>
-    </head>
-    <body>
-      <h2>Instagram Preview</h2>
-      <div class="grid">
-        ${posts.map(url => `<img src="${url}" alt="IG Post">`).join('\n')}
-      </div>
-    </body>
-  </html>`;
-
-  fs.writeFileSync('./public/index.html', html);
-}
-
-getPosts();
-
+        const grid = document.getElementById("insta-grid");
+        images.forEach(url => {
+            const img = document.createElement("img");
+            img.src = url;
+            grid.appendChild(img);
         });
     </script>
 </body>
